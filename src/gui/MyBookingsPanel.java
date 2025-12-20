@@ -6,12 +6,13 @@ import utils.SessionManager;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * Panel to view and manage bookings
+ * Modern My Bookings Panel
  */
 public class MyBookingsPanel extends JPanel {
     
@@ -27,22 +28,19 @@ public class MyBookingsPanel extends JPanel {
     }
     
     private void initializeUI() {
-        setLayout(new BorderLayout(10, 10));
-        setBackground(UIStyles.LIGHT_COLOR);
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setLayout(new BorderLayout(15, 15));
+        setBackground(UIStyles.LIGHT_BG);
         
         // Header
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(UIStyles.WHITE);
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        JPanel headerPanel = UIStyles.createStyledPanel();
+        headerPanel.setLayout(new BorderLayout());
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         
-        JLabel titleLabel = new JLabel("My Bookings");
-        titleLabel.setFont(UIStyles.HEADING_FONT);
-        titleLabel.setForeground(UIStyles.PRIMARY_COLOR);
+        JLabel titleLabel = UIStyles.createSectionLabel("My Bookings");
         headerPanel.add(titleLabel, BorderLayout.WEST);
         
         JButton refreshButton = UIStyles.createStyledButton("Refresh", UIStyles.SECONDARY_COLOR);
-        refreshButton.setPreferredSize(new Dimension(120, 35));
+        refreshButton.setPreferredSize(new Dimension(120, 38));
         refreshButton.addActionListener(e -> loadBookings());
         headerPanel.add(refreshButton, BorderLayout.EAST);
         
@@ -56,7 +54,7 @@ public class MyBookingsPanel extends JPanel {
         JPanel panel = UIStyles.createStyledPanel();
         panel.setLayout(new BorderLayout());
         
-        String[] columnNames = {"PNR", "Train", "Date", "Passengers", "Fare (Rs)", "Status", "Action"};
+        String[] columnNames = {"PNR", "Train", "Date", "Passengers", "Fare (₹)", "Status", "Action"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -67,14 +65,43 @@ public class MyBookingsPanel extends JPanel {
         bookingsTable = new JTable(tableModel);
         bookingsTable.setFont(UIStyles.NORMAL_FONT);
         bookingsTable.setRowHeight(45);
+        bookingsTable.setShowGrid(false);
+        bookingsTable.setIntercellSpacing(new Dimension(0, 0));
+        bookingsTable.setSelectionBackground(new Color(232, 240, 254));
+        bookingsTable.setSelectionForeground(UIStyles.TEXT_PRIMARY);
+        
+        // Header styling
         bookingsTable.getTableHeader().setFont(UIStyles.SUBHEADING_FONT);
         bookingsTable.getTableHeader().setBackground(UIStyles.PRIMARY_COLOR);
         bookingsTable.getTableHeader().setForeground(UIStyles.WHITE);
+        bookingsTable.getTableHeader().setPreferredSize(new Dimension(0, 40));
+        bookingsTable.getTableHeader().setBorder(BorderFactory.createEmptyBorder());
+        
+        // Striped rows
+        bookingsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                
+                if (!isSelected) {
+                    if (row % 2 == 0) {
+                        c.setBackground(Color.WHITE);
+                    } else {
+                        c.setBackground(new Color(248, 249, 250));
+                    }
+                }
+                
+                setHorizontalAlignment(JLabel.CENTER);
+                return c;
+            }
+        });
         
         bookingsTable.getColumn("Action").setCellRenderer(new ButtonRenderer());
         bookingsTable.getColumn("Action").setCellEditor(new ButtonEditor(new JCheckBox()));
         
         JScrollPane scrollPane = new JScrollPane(bookingsTable);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         panel.add(scrollPane, BorderLayout.CENTER);
         
         return panel;
@@ -108,7 +135,6 @@ public class MyBookingsPanel extends JPanel {
     class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
-            String status = (String) table.getValueAt(row, 5);
             setText(value == null ? "" : value.toString());
             
             if ("Cancel".equals(value.toString())) {
@@ -118,7 +144,9 @@ public class MyBookingsPanel extends JPanel {
             }
             
             setForeground(UIStyles.WHITE);
-            setFont(UIStyles.NORMAL_FONT);
+            setFont(new Font("Segoe UI", Font.BOLD, 13));
+            setBorderPainted(false);
+            setFocusPainted(false);
             return this;
         }
     }
@@ -135,7 +163,9 @@ public class MyBookingsPanel extends JPanel {
             button = new JButton();
             button.setOpaque(true);
             button.setForeground(UIStyles.WHITE);
-            button.setFont(UIStyles.NORMAL_FONT);
+            button.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            button.setBorderPainted(false);
+            button.setFocusPainted(false);
             
             button.addActionListener(e -> fireEditingStopped());
         }
@@ -195,12 +225,12 @@ public class MyBookingsPanel extends JPanel {
         details.append("Train: ").append(booking.getTrain().getTrainNumber())
                .append(" - ").append(booking.getTrain().getTrainName()).append("\n");
         details.append("Route: ").append(booking.getTrain().getSource())
-               .append(" - ").append(booking.getTrain().getDestination()).append("\n");
+               .append(" → ").append(booking.getTrain().getDestination()).append("\n");
         details.append("Date: ").append(booking.getTrain().getOperationDate()).append("\n");
         details.append("Departure: ").append(booking.getTrain().getDepartureTime()).append("\n");
         details.append("Seats: ").append(booking.getSeatNumbers()).append("\n");
         details.append("Passengers: ").append(booking.getPassengers().size()).append("\n");
-        details.append("Total Fare: Rs").append(String.format("%.2f", booking.getTotalFare())).append("\n");
+        details.append("Total Fare: ₹").append(String.format("%.2f", booking.getTotalFare())).append("\n");
         details.append("Payment: ").append(booking.getPaymentMethod()).append("\n");
         details.append("Status: ").append(booking.getStatus()).append("\n");
         details.append("Booked On: ").append(booking.getBookingDateTime()
@@ -209,6 +239,8 @@ public class MyBookingsPanel extends JPanel {
         JTextArea textArea = new JTextArea(details.toString());
         textArea.setFont(UIStyles.NORMAL_FONT);
         textArea.setEditable(false);
+        textArea.setBackground(UIStyles.WHITE);
+        textArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         JOptionPane.showMessageDialog(this, new JScrollPane(textArea), 
             "Booking Details", JOptionPane.INFORMATION_MESSAGE);

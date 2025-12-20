@@ -47,25 +47,73 @@ public class DatabaseManager {
                 "admin@railway.com", "9876543210", User.UserRole.ADMIN);
         users.put(admin.getUserId(), admin);
         
-        // Add sample trains
+        // Add sample customer users
+        User customer1 = new User("U002", "john_doe", "pass123", "John Doe",
+                "john.doe@email.com", "9876543211", User.UserRole.CUSTOMER);
+        users.put(customer1.getUserId(), customer1);
+        
+        User customer2 = new User("U003", "jane_smith", "pass123", "Jane Smith",
+                "jane.smith@email.com", "9876543212", User.UserRole.CUSTOMER);
+        users.put(customer2.getUserId(), customer2);
+        
+        User customer3 = new User("U004", "rahul_kumar", "pass123", "Rahul Kumar",
+                "rahul.kumar@email.com", "9876543213", User.UserRole.CUSTOMER);
+        users.put(customer3.getUserId(), customer3);
+        
+        // Add sample trains for different routes
         LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plusDays(1);
+        LocalDate dayAfterTomorrow = today.plusDays(2);
+        
+        // Delhi - Mumbai Route
         addTrain(new Train("12345", "Rajdhani Express", "Delhi", "Mumbai",
                 LocalTime.of(16, 0), LocalTime.of(8, 30), 100, 1500.0, "Superfast", today));
-        addTrain(new Train("12346", "Shatabdi Express", "Delhi", "Chandigarh",
-                LocalTime.of(7, 40), LocalTime.of(11, 10), 80, 800.0, "Express", today));
-        addTrain(new Train("12347", "Duronto Express", "Mumbai", "Kolkata",
-                LocalTime.of(22, 0), LocalTime.of(18, 0), 120, 2000.0, "Superfast", today));
-        addTrain(new Train("12348", "Garib Rath", "Delhi", "Bangalore",
-                LocalTime.of(20, 0), LocalTime.of(6, 0), 90, 1200.0, "Express", today));
-        addTrain(new Train("12349", "Humsafar Express", "Chennai", "Delhi",
-                LocalTime.of(19, 30), LocalTime.of(23, 30), 85, 1800.0, "Superfast", today));
-        
-        // Add trains for tomorrow as well
-        LocalDate tomorrow = today.plusDays(1);
         addTrain(new Train("12345", "Rajdhani Express", "Delhi", "Mumbai",
                 LocalTime.of(16, 0), LocalTime.of(8, 30), 100, 1500.0, "Superfast", tomorrow));
+        addTrain(new Train("12345", "Rajdhani Express", "Delhi", "Mumbai",
+                LocalTime.of(16, 0), LocalTime.of(8, 30), 100, 1500.0, "Superfast", dayAfterTomorrow));
+        
+        // Delhi - Chandigarh Route
+        addTrain(new Train("12346", "Shatabdi Express", "Delhi", "Chandigarh",
+                LocalTime.of(7, 40), LocalTime.of(11, 10), 80, 800.0, "Express", today));
         addTrain(new Train("12346", "Shatabdi Express", "Delhi", "Chandigarh",
                 LocalTime.of(7, 40), LocalTime.of(11, 10), 80, 800.0, "Express", tomorrow));
+        
+        // Mumbai - Kolkata Route
+        addTrain(new Train("12347", "Duronto Express", "Mumbai", "Kolkata",
+                LocalTime.of(22, 0), LocalTime.of(18, 0), 120, 2000.0, "Superfast", today));
+        addTrain(new Train("12347", "Duronto Express", "Mumbai", "Kolkata",
+                LocalTime.of(22, 0), LocalTime.of(18, 0), 120, 2000.0, "Superfast", tomorrow));
+        
+        // Delhi - Bangalore Route  
+        addTrain(new Train("12348", "Garib Rath", "Delhi", "Bangalore",
+                LocalTime.of(20, 0), LocalTime.of(6, 0), 90, 1200.0, "Express", today));
+        addTrain(new Train("12348", "Garib Rath", "Delhi", "Bangalore",
+                LocalTime.of(20, 0), LocalTime.of(6, 0), 90, 1200.0, "Express", tomorrow));
+        
+        // Chennai - Delhi Route
+        addTrain(new Train("12349", "Humsafar Express", "Chennai", "Delhi",
+                LocalTime.of(19, 30), LocalTime.of(23, 30), 85, 1800.0, "Superfast", today));
+        addTrain(new Train("12349", "Humsafar Express", "Chennai", "Delhi",
+                LocalTime.of(19, 30), LocalTime.of(23, 30), 85, 1800.0, "Superfast", tomorrow));
+        
+        // Kolkata - Bangalore Route
+        addTrain(new Train("12350", "Sampark Kranti", "Kolkata", "Bangalore",
+                LocalTime.of(14, 30), LocalTime.of(8, 45), 95, 1400.0, "Express", today));
+        addTrain(new Train("12350", "Sampark Kranti", "Kolkata", "Bangalore",
+                LocalTime.of(14, 30), LocalTime.of(8, 45), 95, 1400.0, "Express", tomorrow));
+        
+        // Mumbai - Chennai Route
+        addTrain(new Train("12351", "Mumbai Express", "Mumbai", "Chennai",
+                LocalTime.of(18, 15), LocalTime.of(12, 30), 110, 1600.0, "Superfast", today));
+        addTrain(new Train("12351", "Mumbai Express", "Mumbai", "Chennai",
+                LocalTime.of(18, 15), LocalTime.of(12, 30), 110, 1600.0, "Superfast", tomorrow));
+        
+        // Delhi - Kolkata Route
+        addTrain(new Train("12352", "Howrah Express", "Delhi", "Kolkata",
+                LocalTime.of(17, 0), LocalTime.of(10, 30), 100, 1300.0, "Express", today));
+        addTrain(new Train("12352", "Howrah Express", "Delhi", "Kolkata",
+                LocalTime.of(17, 0), LocalTime.of(10, 30), 100, 1300.0, "Express", tomorrow));
     }
     
     // User operations

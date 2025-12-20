@@ -58,7 +58,7 @@ public class BookingDialog extends JDialog {
     
     private JPanel createTrainDetailsPanel() {
         JPanel panel = new JPanel(new GridLayout(3, 2, 10, 5));
-        panel.setBackground(UIStyles.LIGHT_COLOR);
+        panel.setBackground(UIStyles.WHITE);
         panel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(UIStyles.PRIMARY_COLOR, 1),
             BorderFactory.createEmptyBorder(15, 15, 15, 15)
@@ -228,7 +228,7 @@ public class BookingDialog extends JDialog {
         private JTextField idNumberField;
         
         public PassengerForm(int passengerNumber) {
-            setBackground(UIStyles.LIGHT_COLOR);
+            setBackground(UIStyles.WHITE);
             setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(UIStyles.PRIMARY_COLOR),
                 "Passenger " + passengerNumber,

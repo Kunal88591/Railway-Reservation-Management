@@ -7,13 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Admin Dashboard - Main panel for admin operations
+ * Modern Admin Dashboard
  */
 public class AdminDashboard extends JPanel {
     
     private RailwayReservationApp mainApp;
     private JPanel contentPanel;
     private CardLayout contentLayout;
+    private JPanel currentActivePanel = null;
     
     // Panel names
     private static final String MANAGE_TRAINS_PANEL = "MANAGE_TRAINS";
@@ -28,18 +29,19 @@ public class AdminDashboard extends JPanel {
     
     private void initializeUI() {
         setLayout(new BorderLayout());
-        setBackground(UIStyles.LIGHT_COLOR);
+        setBackground(UIStyles.LIGHT_BG);
         
-        // Create header
+        // Create modern header
         add(createHeader(), BorderLayout.NORTH);
         
-        // Create sidebar
+        // Create modern sidebar
         add(createSidebar(), BorderLayout.WEST);
         
         // Create content area
         contentLayout = new CardLayout();
         contentPanel = new JPanel(contentLayout);
-        contentPanel.setBackground(UIStyles.LIGHT_COLOR);
+        contentPanel.setBackground(UIStyles.LIGHT_BG);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Add content panels
         contentPanel.add(new ManageTrainsPanel(this), MANAGE_TRAINS_PANEL);
@@ -54,26 +56,54 @@ public class AdminDashboard extends JPanel {
     }
     
     private JPanel createHeader() {
-        JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(UIStyles.DANGER_COLOR);
-        header.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        JPanel header = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                
+                // Gradient background for admin (different colors)
+                GradientPaint gradient = new GradientPaint(
+                    0, 0, new Color(211, 47, 47),  // Red
+                    getWidth(), 0, new Color(244, 67, 54)  // Lighter Red
+                );
+                g2d.setPaint(gradient);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                
+                g2d.dispose();
+            }
+        };
+        
+        header.setPreferredSize(new Dimension(0, 70));
+        header.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
+        header.setOpaque(false);
         
         User currentUser = SessionManager.getInstance().getCurrentUser();
         
         JLabel titleLabel = new JLabel("Admin Dashboard");
-        titleLabel.setFont(UIStyles.HEADING_FONT);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
         titleLabel.setForeground(UIStyles.WHITE);
         
+        // Admin badge
+        JPanel adminPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        adminPanel.setOpaque(false);
+        
+        JLabel adminIcon = new JLabel("[A]");
+        adminIcon.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        adminPanel.add(adminIcon);
+        
         JLabel userLabel = new JLabel("Admin: " + currentUser.getFullName());
-        userLabel.setFont(UIStyles.NORMAL_FONT);
+        userLabel.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         userLabel.setForeground(UIStyles.WHITE);
+        adminPanel.add(userLabel);
         
         JButton logoutButton = UIStyles.createStyledButton("Logout", UIStyles.DARK_COLOR);
-        logoutButton.setPreferredSize(new Dimension(100, 35));
+        logoutButton.setPreferredSize(new Dimension(110, 38));
         logoutButton.addActionListener(e -> handleLogout());
         
         header.add(titleLabel, BorderLayout.WEST);
-        header.add(userLabel, BorderLayout.CENTER);
+        header.add(adminPanel, BorderLayout.CENTER);
         header.add(logoutButton, BorderLayout.EAST);
         
         return header;
@@ -82,43 +112,71 @@ public class AdminDashboard extends JPanel {
     private JPanel createSidebar() {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setBackground(UIStyles.DARK_COLOR);
-        sidebar.setPreferredSize(new Dimension(220, 0));
-        sidebar.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        sidebar.setBackground(UIStyles.PRIMARY_DARK);
+        sidebar.setPreferredSize(new Dimension(240, 0));
+        sidebar.setBorder(BorderFactory.createEmptyBorder(25, 0, 25, 0));
+        
+        // Add spacing at top
+        sidebar.add(Box.createVerticalStrut(10));
         
         // Menu items
-        addMenuItem(sidebar, "Manage Trains", MANAGE_TRAINS_PANEL);
-        addMenuItem(sidebar, "View Bookings", VIEW_BOOKINGS_PANEL);
-        addMenuItem(sidebar, "View Users", VIEW_USERS_PANEL);
-        addMenuItem(sidebar, "Reports", REPORTS_PANEL);
+        addMenuItem(sidebar, "Manage Trains", MANAGE_TRAINS_PANEL, true);
+        addMenuItem(sidebar, "View Bookings", VIEW_BOOKINGS_PANEL, false);
+        addMenuItem(sidebar, "View Users", VIEW_USERS_PANEL, false);
+        addMenuItem(sidebar, "Reports", REPORTS_PANEL, false);
+        
+        // Add glue to push items to top
+        sidebar.add(Box.createVerticalGlue());
         
         return sidebar;
     }
     
-    private void addMenuItem(JPanel sidebar, String text, String panelName) {
-        JButton menuButton = new JButton(text);
-        menuButton.setFont(UIStyles.NORMAL_FONT);
-        menuButton.setForeground(UIStyles.WHITE);
-        menuButton.setBackground(UIStyles.DARK_COLOR);
-        menuButton.setBorderPainted(false);
-        menuButton.setFocusPainted(false);
-        menuButton.setHorizontalAlignment(SwingConstants.LEFT);
-        menuButton.setMaximumSize(new Dimension(220, 50));
-        menuButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        menuButton.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+    
+    private void addMenuItem(JPanel sidebar, String text, String panelName, boolean isFirst) {
+        // Create a panel instead of button for better control
+        JPanel menuPanel = new JPanel(new BorderLayout());
+        menuPanel.setBackground(isFirst ? UIStyles.PRIMARY_COLOR : UIStyles.PRIMARY_DARK);
+        menuPanel.setMaximumSize(new Dimension(240, 55));
+        menuPanel.setPreferredSize(new Dimension(240, 55));
+        menuPanel.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
+        menuPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        menuButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        // Add label with white text
+        JLabel textLabel = new JLabel(text);
+        textLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        textLabel.setForeground(Color.WHITE);
+        menuPanel.add(textLabel, BorderLayout.WEST);
+        
+        if (isFirst) {
+            currentActivePanel = menuPanel;
+        }
+        
+        // Mouse listeners for hover and click
+        menuPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                menuButton.setBackground(UIStyles.DANGER_COLOR);
+                if (menuPanel != currentActivePanel) {
+                    menuPanel.setBackground(UIStyles.PRIMARY_COLOR.brighter());
+                }
             }
+            
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                menuButton.setBackground(UIStyles.DARK_COLOR);
+                if (menuPanel != currentActivePanel) {
+                    menuPanel.setBackground(UIStyles.PRIMARY_DARK);
+                }
+            }
+            
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (currentActivePanel != null) {
+                    currentActivePanel.setBackground(UIStyles.PRIMARY_DARK);
+                }
+                menuPanel.setBackground(UIStyles.PRIMARY_COLOR);
+                currentActivePanel = menuPanel;
+                showContent(panelName);
             }
         });
         
-        menuButton.addActionListener(e -> showContent(panelName));
-        
-        sidebar.add(menuButton);
+        sidebar.add(menuPanel);
+        sidebar.add(Box.createVerticalStrut(5));
     }
     
     public void showContent(String panelName) {

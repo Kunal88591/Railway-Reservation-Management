@@ -5,6 +5,7 @@ import utils.DatabaseManager;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Panel for searching trains
+ * Modern Search Trains Panel
  */
 public class SearchTrainsPanel extends JPanel {
     
@@ -31,9 +32,8 @@ public class SearchTrainsPanel extends JPanel {
     }
     
     private void initializeUI() {
-        setLayout(new BorderLayout(10, 10));
-        setBackground(UIStyles.LIGHT_COLOR);
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setLayout(new BorderLayout(15, 15));
+        setBackground(UIStyles.LIGHT_BG);
         
         // Search panel
         add(createSearchPanel(), BorderLayout.NORTH);
@@ -51,57 +51,66 @@ public class SearchTrainsPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
         // Title
-        JLabel titleLabel = new JLabel("Search Trains");
-        titleLabel.setFont(UIStyles.HEADING_FONT);
-        titleLabel.setForeground(UIStyles.PRIMARY_COLOR);
+        JLabel titleLabel = UIStyles.createSectionLabel("Search Trains");
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 4;
+        gbc.anchor = GridBagConstraints.WEST;
         searchPanel.add(titleLabel, gbc);
         
         gbc.gridwidth = 1;
-        
-        // Source
         gbc.gridy = 1;
+        
+        // From city
         gbc.gridx = 0;
-        JLabel sourceLabel = UIStyles.createStyledLabel("From:", UIStyles.SUBHEADING_FONT);
+        gbc.insets = new Insets(15, 10, 5, 10);
+        JLabel sourceLabel = UIStyles.createStyledLabel("From", UIStyles.SUBHEADING_FONT);
         searchPanel.add(sourceLabel, gbc);
         
-        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(5, 10, 10, 10);
         Set<String> cities = DatabaseManager.getInstance().getAvailableCities();
         sourceCombo = new JComboBox<>(cities.toArray(new String[0]));
         sourceCombo.setFont(UIStyles.NORMAL_FONT);
-        sourceCombo.setPreferredSize(new Dimension(180, 35));
+        sourceCombo.setPreferredSize(new Dimension(200, 40));
+        sourceCombo.setBackground(Color.WHITE);
         searchPanel.add(sourceCombo, gbc);
         
-        // Destination
-        gbc.gridx = 2;
-        JLabel destLabel = UIStyles.createStyledLabel("To:", UIStyles.SUBHEADING_FONT);
+        // To city
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(15, 10, 5, 10);
+        JLabel destLabel = UIStyles.createStyledLabel("To", UIStyles.SUBHEADING_FONT);
         searchPanel.add(destLabel, gbc);
         
-        gbc.gridx = 3;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(5, 10, 10, 10);
         destinationCombo = new JComboBox<>(cities.toArray(new String[0]));
         destinationCombo.setFont(UIStyles.NORMAL_FONT);
-        destinationCombo.setPreferredSize(new Dimension(180, 35));
+        destinationCombo.setPreferredSize(new Dimension(200, 40));
+        destinationCombo.setBackground(Color.WHITE);
         searchPanel.add(destinationCombo, gbc);
         
         // Date
-        gbc.gridy = 2;
-        gbc.gridx = 0;
-        JLabel dateLabel = UIStyles.createStyledLabel("Date:", UIStyles.SUBHEADING_FONT);
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(15, 10, 5, 10);
+        JLabel dateLabel = UIStyles.createStyledLabel("Travel Date", UIStyles.SUBHEADING_FONT);
         searchPanel.add(dateLabel, gbc);
         
-        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(5, 10, 10, 10);
         dateField = UIStyles.createStyledTextField();
         dateField.setText(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
-        dateField.setPreferredSize(new Dimension(180, 35));
+        dateField.setPreferredSize(new Dimension(180, 40));
         searchPanel.add(dateField, gbc);
         
         // Search button
-        gbc.gridx = 2;
-        gbc.gridwidth = 2;
-        searchButton = UIStyles.createStyledButton("Search Trains", UIStyles.PRIMARY_COLOR);
-        searchButton.setPreferredSize(new Dimension(180, 40));
+        gbc.gridx = 3;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(5, 10, 10, 10);
+        searchButton = UIStyles.createStyledButton("Search", UIStyles.PRIMARY_COLOR);
+        searchButton.setPreferredSize(new Dimension(130, 40));
         searchButton.addActionListener(e -> handleSearch());
         searchPanel.add(searchButton, gbc);
         
@@ -112,32 +121,66 @@ public class SearchTrainsPanel extends JPanel {
         JPanel resultsPanel = UIStyles.createStyledPanel();
         resultsPanel.setLayout(new BorderLayout(10, 10));
         
-        JLabel titleLabel = new JLabel("Available Trains");
-        titleLabel.setFont(UIStyles.HEADING_FONT);
-        titleLabel.setForeground(UIStyles.PRIMARY_COLOR);
+        JLabel titleLabel = UIStyles.createSectionLabel("Available Trains");
         resultsPanel.add(titleLabel, BorderLayout.NORTH);
         
-        // Create table
-        String[] columnNames = {"Train No.", "Train Name", "Type", "Departure", "Arrival", "Available Seats", "Fare (Rs)", "Action"};
+        // Create modern table
+        String[] columnNames = {"Train No.", "Train Name", "Type", "Departure", "Arrival", "Seats", "Fare (₹)", "Action"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 7; // Only Action column is editable (for button)
+                return column == 7; // Only Action column is editable
             }
         };
         
         trainTable = new JTable(tableModel);
         trainTable.setFont(UIStyles.NORMAL_FONT);
-        trainTable.setRowHeight(40);
+        trainTable.setRowHeight(45);
+        trainTable.setShowGrid(false);
+        trainTable.setIntercellSpacing(new Dimension(0, 0));
+        trainTable.setSelectionBackground(new Color(232, 240, 254));
+        trainTable.setSelectionForeground(UIStyles.TEXT_PRIMARY);
+        
+        // Header styling
         trainTable.getTableHeader().setFont(UIStyles.SUBHEADING_FONT);
         trainTable.getTableHeader().setBackground(UIStyles.PRIMARY_COLOR);
         trainTable.getTableHeader().setForeground(UIStyles.WHITE);
+        trainTable.getTableHeader().setPreferredSize(new Dimension(0, 40));
+        trainTable.getTableHeader().setBorder(BorderFactory.createEmptyBorder());
+        
+        // Center align cells
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < trainTable.getColumnCount() - 1; i++) {
+            trainTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
         
         // Add button column
         trainTable.getColumn("Action").setCellRenderer(new ButtonRenderer());
         trainTable.getColumn("Action").setCellEditor(new ButtonEditor(new JCheckBox()));
         
+        // Striped rows
+        trainTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                
+                if (!isSelected) {
+                    if (row % 2 == 0) {
+                        c.setBackground(Color.WHITE);
+                    } else {
+                        c.setBackground(new Color(248, 249, 250));
+                    }
+                }
+                
+                setHorizontalAlignment(JLabel.CENTER);
+                return c;
+            }
+        });
+        
         JScrollPane scrollPane = new JScrollPane(trainTable);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         resultsPanel.add(scrollPane, BorderLayout.CENTER);
         
         return resultsPanel;
@@ -198,14 +241,19 @@ public class SearchTrainsPanel extends JPanel {
     class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
+            setContentAreaFilled(true);
         }
         
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
             setText((value == null) ? "Book" : value.toString());
             setBackground(UIStyles.SUCCESS_COLOR);
-            setForeground(UIStyles.WHITE);
-            setFont(UIStyles.NORMAL_FONT);
+            setForeground(Color.WHITE);
+            setFont(new Font("Segoe UI", Font.BOLD, 13));
+            setBorderPainted(true);
+            setBorder(BorderFactory.createLineBorder(UIStyles.SUCCESS_COLOR.darker(), 1));
+            setFocusPainted(false);
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
             return this;
         }
     }
@@ -221,9 +269,13 @@ public class SearchTrainsPanel extends JPanel {
             super(checkBox);
             button = new JButton();
             button.setOpaque(true);
+            button.setContentAreaFilled(true);
             button.setBackground(UIStyles.SUCCESS_COLOR);
-            button.setForeground(UIStyles.WHITE);
-            button.setFont(UIStyles.NORMAL_FONT);
+            button.setForeground(Color.WHITE);
+            button.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            button.setBorderPainted(true);
+            button.setBorder(BorderFactory.createLineBorder(UIStyles.SUCCESS_COLOR.darker(), 1));
+            button.setFocusPainted(false);
             
             button.addActionListener(e -> {
                 fireEditingStopped();
@@ -240,10 +292,10 @@ public class SearchTrainsPanel extends JPanel {
         }
         
         public Object getCellEditorValue() {
-            if (clicked) {
+            if (clicked && searchResults != null && row < searchResults.size()) {
                 // Open booking dialog
                 Train selectedTrain = searchResults.get(row);
-                openBookingDialog(selectedTrain);
+                SwingUtilities.invokeLater(() -> openBookingDialog(selectedTrain));
             }
             clicked = false;
             return label;

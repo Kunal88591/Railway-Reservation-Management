@@ -25,7 +25,7 @@ public class ReportsPanel extends JPanel {
     
     private void initializeUI() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(UIStyles.LIGHT_COLOR);
+        setBackground(UIStyles.LIGHT_BG);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Header
@@ -47,7 +47,7 @@ public class ReportsPanel extends JPanel {
     private JPanel createReportContent() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(UIStyles.LIGHT_COLOR);
+        panel.setBackground(UIStyles.WHITE);
         
         DatabaseManager dbManager = DatabaseManager.getInstance();
         
@@ -103,7 +103,7 @@ public class ReportsPanel extends JPanel {
         JTextArea textArea = new JTextArea();
         textArea.setFont(UIStyles.NORMAL_FONT);
         textArea.setEditable(false);
-        textArea.setBackground(UIStyles.LIGHT_COLOR);
+        textArea.setBackground(UIStyles.WHITE);
         textArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         DatabaseManager dbManager = DatabaseManager.getInstance();
@@ -145,7 +145,7 @@ public class ReportsPanel extends JPanel {
         JTextArea textArea = new JTextArea();
         textArea.setFont(UIStyles.NORMAL_FONT);
         textArea.setEditable(false);
-        textArea.setBackground(UIStyles.LIGHT_COLOR);
+        textArea.setBackground(UIStyles.WHITE);
         textArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         DatabaseManager dbManager = DatabaseManager.getInstance();
@@ -198,7 +198,7 @@ public class ReportsPanel extends JPanel {
         JTextArea textArea = new JTextArea();
         textArea.setFont(UIStyles.NORMAL_FONT);
         textArea.setEditable(false);
-        textArea.setBackground(UIStyles.LIGHT_COLOR);
+        textArea.setBackground(UIStyles.WHITE);
         textArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         DatabaseManager dbManager = DatabaseManager.getInstance();

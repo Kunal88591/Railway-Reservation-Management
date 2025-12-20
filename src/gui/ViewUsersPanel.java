@@ -27,7 +27,7 @@ public class ViewUsersPanel extends JPanel {
     
     private void initializeUI() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(UIStyles.LIGHT_COLOR);
+        setBackground(UIStyles.LIGHT_BG);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Header

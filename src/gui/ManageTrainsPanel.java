@@ -28,18 +28,17 @@ public class ManageTrainsPanel extends JPanel {
     }
     
     private void initializeUI() {
-        setLayout(new BorderLayout(10, 10));
-        setBackground(UIStyles.LIGHT_COLOR);
+        setLayout(new BorderLayout(15, 15));
+        setBackground(UIStyles.LIGHT_BG);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Header
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(UIStyles.WHITE);
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        JPanel headerPanel = UIStyles.createStyledPanel();
+        headerPanel.setLayout(new BorderLayout());
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         
-        JLabel titleLabel = new JLabel("Manage Trains");
+        JLabel titleLabel = UIStyles.createSectionLabel("Manage Trains");
         titleLabel.setFont(UIStyles.HEADING_FONT);
-        titleLabel.setForeground(UIStyles.PRIMARY_COLOR);
         headerPanel.add(titleLabel, BorderLayout.WEST);
         
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
@@ -78,7 +77,10 @@ public class ManageTrainsPanel extends JPanel {
         
         trainsTable = new JTable(tableModel);
         trainsTable.setFont(UIStyles.NORMAL_FONT);
-        trainsTable.setRowHeight(40);
+        trainsTable.setRowHeight(45);
+        trainsTable.setShowGrid(false);
+        trainsTable.setIntercellSpacing(new Dimension(0, 0));
+        trainsTable.setSelectionBackground(new Color(255, 235, 238));
         trainsTable.getTableHeader().setFont(UIStyles.SUBHEADING_FONT);
         trainsTable.getTableHeader().setBackground(UIStyles.PRIMARY_COLOR);
         trainsTable.getTableHeader().setForeground(UIStyles.WHITE);

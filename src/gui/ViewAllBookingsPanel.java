@@ -27,7 +27,7 @@ public class ViewAllBookingsPanel extends JPanel {
     
     private void initializeUI() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(UIStyles.LIGHT_COLOR);
+        setBackground(UIStyles.LIGHT_BG);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         // Header
@@ -82,7 +82,7 @@ public class ViewAllBookingsPanel extends JPanel {
     
     private JPanel createStatsPanel() {
         JPanel panel = new JPanel(new GridLayout(1, 4, 10, 0));
-        panel.setBackground(UIStyles.LIGHT_COLOR);
+        panel.setBackground(UIStyles.WHITE);
         panel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
         
         // Will be updated in loadBookings

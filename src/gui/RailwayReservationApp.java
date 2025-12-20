@@ -103,6 +103,9 @@ public class RailwayReservationApp extends JFrame {
     }
     
     public static void main(String[] args) {
+        // Apply dark theme globally BEFORE creating any components
+        UIStyles.applyDarkTheme();
+        
         SwingUtilities.invokeLater(() -> {
             RailwayReservationApp app = new RailwayReservationApp();
             app.setVisible(true);
