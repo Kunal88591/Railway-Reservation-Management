@@ -1,0 +1,42 @@
+.
+├── src
+│   ├── exceptions
+│   │   ├── AuthenticationException.java
+│   │   ├── BookingException.java
+│   │   ├── InsufficientSeatsException.java
+│   │   ├── RailwayReservationException.java
+│   │   ├── TrainNotFoundException.java
+│   │   └── ValidationException.java
+│   ├── gui
+│   │   ├── AdminDashboard.java
+│   │   ├── BookingDialog.java
+│   │   ├── CustomerDashboard.java
+│   │   ├── LoginPanel.java
+│   │   ├── ManageTrainsPanel.java
+│   │   ├── MyBookingsPanel.java
+│   │   ├── ProfilePanel.java
+│   │   ├── RailwayReservationApp.java
+│   │   ├── RegisterPanel.java
+│   │   ├── ReportsPanel.java
+│   │   ├── SearchTrainsPanel.java
+│   │   ├── UIStyles.java
+│   │   ├── ViewAllBookingsPanel.java
+│   │   └── ViewUsersPanel.java
+│   ├── models
+│   │   ├── Booking.java
+│   │   ├── Passenger.java
+│   │   ├── Train.java
+│   │   └── User.java
+│   └── utils
+│       ├── DatabaseManager.java
+│       ├── SessionManager.java
+│       └── ValidationUtils.java
+├── FEATURES.md
+├── README.md
+├── SETUP.md
+├── USER_GUIDE.md
+├── project_structure.txt
+├── run.bat
+└── run.sh
+
+6 directories, 34 files
